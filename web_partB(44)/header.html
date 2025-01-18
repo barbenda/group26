@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Example</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page-container">
+    <header>
+        <a href="front_page.html" class="h1-link">
+            <h1>d&b</h1>
+        </a>
+     <div class="search-bar">
+    <form id="search-form" action="search_results.html" method="get">
+        <div class="search-container">
+            <input
+                type="text"
+                name="query"
+                id="searchInput"
+                placeholder="Search our products..."
+                required
+            />
+            <button type="submit">
+                <img src="images/search-icon.png" alt="Search">
+            </button>
+        </div>
+    </form>
+</div>
+
+        <div class="header-icons">
+            <a href="favorites.html" title="Favorites">
+                <img src="images/heart-icon.png" alt="Favorites">
+            </a>
+<a href="cart.html" title="Cart" class="cart-icon-container">
+    <img src="images/shopping-cart-icon.png" alt="Cart" id="cart-icon">
+    <span id="cart-count" class="cart-count">0</span>
+</a>
+
+            <div class="account-icon" onclick="toggleAccountMenu()" title="Account">
+                <img src="images/user-icon.png" alt="Account">
+            </div>
+            <div class="account-menu" id="accountMenu">
+                <a href="personalArea.html#personal-info">Personal Info</a>
+                <a href="personalArea.html#order-history">Order History</a>
+                <a href="personalArea.html#feedbacks">Feedbacks</a>
+                <a href="personalArea.html#help-center">Help Center</a>
+            </div>
+            <div class="menu-icon" onclick="toggleMenu()" title="Menu">
+                &#9776;
+            </div>
+        </div>
+        <div class="menu" id="menu">
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="#" onclick="showPopup('signInPopup')">Sign In</a>
+            <a href="#" onclick="showPopup('signUpPopup')">Sign Up</a>
+        </div>
+    </header>
+</div>
+<script src="header.js"></script>
+
+</body>
+</html>

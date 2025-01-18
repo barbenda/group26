@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page - D&B Clothing</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        nav {
+            margin: 10px 0;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+         Product Page Layout
+        .product-page {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 30px; /* Adjust gap for better scaling */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two-column layout */
+            gap: 20px;
+            max-width: 1400px; /* Reduced maximum width for better scaling */
+            width: 90%; /* Adjust container width to fit most screen sizes */
+            background-color: #fff;
+            border: 1px solid #000;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+.product-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    top: 20px; /* מרחק מהחלק העליון */
+    height: fit-content; /* התמונה תישאר מותאמת לתוכן */
+}
+
+        .product-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+        }
+
+        .product-image img {
+            max-width: 90%; /* Adjust image size for better scaling */
+            max-height: 500px; /* Limit height to maintain proportion */
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+        .product-details h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .price {
+            font-size: 1.5em;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .rating {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .stock-status {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #e60000;
+            margin: 5px 0;
+        }
+
+        /* Selection styles */
+        .size-selection,
+        .color-selection {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+
+        .size-selection label,
+        .color-selection label {
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .size-selection button,
+        .color-selection button {
+            background-color: #fff;
+            border: 1px solid #000;
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .size-selection button:hover,
+        .color-selection button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .size-selection button.selected,
+        .color-selection button.selected {
+            background-color: #000;
+            color: #fff;
+        }
+       button {
+            background-color: #000;
+
+            color: #fff;
+
+            border: none;
+
+            padding: 15px;
+
+            margin: 10px 0;
+
+            cursor: pointer;
+
+            border-radius: 5px;
+
+            font-size: 1.1em;
+
+            width: 100%;
+
+        }
+
+        .add-to-cart {
+
+            max-width: 100%;
+
+            font-size: 14px;
+
+            margin: 0px;
+
+            padding: 12px;
+
+        }
+        .add-to-wishlist {
+
+            max-width: 100%;
+
+            padding: 10px;
+
+            margin: 0px;
+
+            background-color: #fff;
+
+            color: #e60000;
+
+            border: 0px solid #e60000;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 14px;
+
+        }
+        .add-to-wishlist::before {
+
+            content: '\2764';
+
+            margin-right: 5px;
+
+        }
+        .add-to-wishlist:hover {
+
+            background-color: #f9f9f9;
+
+        }
+        /* Accordion Styles */
+        .accordion {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .accordion h3 {
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .accordion-content p {
+            margin: 0;
+        }
+
+        .accordion h3:hover {
+            background-color: #eee;
+        }
+
+
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .product-container {
+                grid-template-columns: 1fr; /* Single column layout on smaller screens */
+                max-width: 90%; /* Adjust container width */
+            }
+
+            .product-image {
+                border-right: none;
+                padding: 20px 0; /* Add spacing for smaller screens */
+            }
+
+            .product-details {
+                padding: 20px 0; /* Adjust padding for smaller screens */
+            }
+
+            .product-page {
+                gap: 20px; /* Reduce gap on smaller screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-container {
+                padding: 10px;
+            }
+
+            .product-image img {
+                max-height: 300px; /* Adjust image height for small screens */
+            }
+
+            .accordion h3 {
+                font-size: 1em; /* Reduce accordion font size */
+            }
+        }
+
+
+    </style>
+    <script>
+        function toggleAccordion(event) {
+            const content = event.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+
+        function selectOption(event, className) {
+            const buttons = document.querySelectorAll(`.${className} button`);
+            buttons.forEach(button => button.classList.remove("selected"));
+            buttons.forEach(button => button.classList.remove("selected"));
+            event.target.classList.add("selected");
+        }
+    </script>
+</head>
+<body>
+  <div id="header-container"></div>
+
+
+    <main class="product-page">
+        <div class="product-container">
+            <div class="product-image">
+                <img src="images/jeans1.jpg" alt="Product Image">
+            </div>
+            <div class="product-details">
+                <h2>Product Name</h2>
+                <p class="price">213.00 NIS</p>
+                <p class="rating">Rating: ★★★★☆ (4/5)</p>
+
+                <div class="size-selection">
+                    <label for="size">Size:</label>
+                    <button onclick="selectOption(event, 'size-selection')">XS</button>
+                    <button onclick="selectOption(event, 'size-selection')">S</button>
+                    <button onclick="selectOption(event, 'size-selection')">M</button>
+                    <button onclick="selectOption(event, 'size-selection')">L</button>
+                    <button onclick="selectOption(event, 'size-selection')">XL</button>
+                    <button onclick="selectOption(event, 'size-selection')">XXL</button>
+                    <button onclick="selectOption(event, 'size-selection')">XXXL</button>
+                </div>
+
+                <div class="color-selection">
+                    <label for="color">Color:</label>
+                    <button onclick="selectOption(event, 'color-selection')">Red</button>
+                    <button onclick="selectOption(event, 'color-selection')">Blue</button>
+                    <button onclick="selectOption(event, 'color-selection')">Green</button>
+                </div>
+
+                <p class="stock-status">Low stock - 9 items left</p>
+
+<button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                <button class="add-to-wishlist" onclick="addToFavorites()" >Add to Wishlist</button>
+
+                <!-- Accordion -->
+                <div class="accordion">
+                    <h3 onclick="toggleAccordion(this)">Description</h3>
+                    <div class="accordion-content">
+                        <p>This flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and sty flannel top combines comfort and style for your everyday look.</p>
+                    </div>
+
+                    <h3 onclick="toggleAccordion(this)">Size & Fit</h3>
+                    <div class="accordion-content">
+                        <p>Fits true to size. Refer to our <a href="#">Size Guide</a>.</p>
+                    </div>
+
+                    <h3 onclick="toggleAccordion(this)">Fast Shipping</h3>
+                    <div class="accordion-content">
+                        <p>Free shipping on orders over 300 NIS.</p>
+                    </div>
+
+                    <h3 onclick="toggleAccordion(this)">Easy Returns</h3>
+                    <div class="accordion-content">
+                        <p>Hassle-free returns within 30 days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+//2
+    <script>
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        id: params.get('id'),
+        name: params.get('name'),
+        price: params.get('price'),
+        img: params.get('img')
+    };
+}
+
+
+        function loadProductDetails() {
+            const { name, price, img } = getQueryParams();
+
+            if (name && price && img) {
+                document.querySelector('.product-details h2').textContent = name;
+                document.querySelector('.product-details .price').textContent = price;
+                document.querySelector('.product-image img').src = img; // Set the image source
+            } else {
+                document.querySelector('.product-details h2').textContent = 'Product Not Found';
+                document.querySelector('.product-details .price').textContent = '';
+                document.querySelector('.product-image img').style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProductDetails);
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function selectOption(event, className) {
+    const buttons = document.querySelectorAll(`.${className} button`);
+    buttons.forEach(button => button.classList.remove('selected'));
+    event.target.classList.add('selected');
+}
+//3 (אחרי שהכנסתי כתבתי את זה)
+function addToCart() {
+    const { id, name, price, img } = getQueryParams();
+    const selectedSize = document.querySelector('.size-selection button.selected');
+    const selectedColor = document.querySelector('.color-selection button.selected');
+
+    if (!selectedSize || !selectedColor) {
+        alert('Please select both size and color before adding to cart!');
+        return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const product = {
+        id: id,
+        name: name,
+        price: price,
+        imgSrc: img,
+        size: selectedSize.textContent,
+        color: selectedColor.textContent,
+        quantity: 1
+    };
+
+    const existingProduct = cart.find(item => item.id === id && item.size === product.size && item.color === product.color);
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push(product);
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('Product added to cart!');
+        updateCartCount(); // עדכון המונה
+
+}
+
+function addToFavorites() {
+    const { id, name, price, img } = getQueryParams();
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const product = {
+        id: id,
+        name: name,
+        price: price,
+        imgSrc: img
+    };
+
+    if (favorites.some(fav => fav.id === id)) {
+        alert('This product is already in your favorites!');
+        return;
+    }
+
+    favorites.push(product);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    alert('Product added to favorites!');
+}
+
+
+    </script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+<script src="header.js"></script>
+
+</html>

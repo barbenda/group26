@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - D&B Clothing</title>
+    <style>
+        h2 {
+            text-align: center;
+            margin-bottom: 0px;
+        }
+/* General Form Styling */
+/* General Form Styling */
+#ContactUsForm {
+    max-width: 600px;
+    margin: 40px auto;
+    margin-top: 5px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form Labels */
+#ContactUsForm label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333333;
+}
+
+/* Form Inputs */
+#ContactUsForm input[type="text"],
+#ContactUsForm input[type="email"],
+#ContactUsForm select,
+#ContactUsForm textarea,
+#ContactUsForm input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: #333333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Input Focus State */
+#ContactUsForm input:focus,
+#ContactUsForm select:focus,
+#ContactUsForm textarea:focus {
+    outline: none;
+    border-color: #444444;
+    box-shadow: 0 0 5px rgba(68, 68, 68, 0.5);
+    background-color: #ffffff;
+}
+
+/* Placeholder Styling */
+#ContactUsForm input::placeholder,
+#ContactUsForm textarea::placeholder {
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+/* Submit Button */
+#ContactUsForm button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#ContactUsForm button[type="submit"]:hover {
+    background-color: #555555;
+    transform: scale(1.02);
+}
+
+/* File Input Styling */
+#ContactUsForm input[type="file"] {
+    padding: 10px;
+    border: 1px dashed #cccccc;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#ContactUsForm input[type="file"]:hover {
+    background-color: #f0f0f0;
+}
+
+/* Form Heading */
+#ContactUsForm h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #ContactUsForm {
+        padding: 20px;
+    }
+
+    #ContactUsForm h2 {
+        font-size: 1.3rem;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+  <div id="header-container"></div>
+
+<!--    <header>-->
+<!--        <h1>Contact Us</h1>-->
+<!--    </header>-->
+
+<!--    <nav>-->
+<!--        <a href="front_page.html" >Home</a>-->
+<!--        <a href="shop.html">Shop</a>-->
+<!--        <a href="about.html" >About Us</a>-->
+<!--        <a href="contact.html" >Contact</a>-->
+<!--    </nav>-->
+
+    <main>
+
+        <h2>Get in Touch</h2>
+        <form id="ContactUsForm" action="mailto:dotanber@gmail.com" method="post" enctype="text/plain">
+            <label for="fullname">Full name *</label>
+            <input type="text" id="fullname" name="Full name" placeholder="Your full name" required>
+
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="Email" placeholder="your@email.com" required>
+
+            <label for="subject">Subject *</label>
+            <select id="subject" name="Subject" required>
+                <option value="">Select a subject</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Order Issue">Order Issue</option>
+                <option value="Feedback">Feedback</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="message">Message *</label>
+            <textarea id="message" name="Message" rows="5" placeholder="Write your message" required></textarea>
+
+            <label for="file">Attach Files</label>
+            <input type="file" id="file" name="file">
+
+            <button type="submit">Send</button>
+        </form>
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+<script src="header.js"></script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</body>
+</html>

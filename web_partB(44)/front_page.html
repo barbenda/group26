@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&B Clothing - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+      <div id="header-container"></div>
+
+
+    <main>
+        <section class="collections">
+            <div class="collection">
+                <img src="images/newArrivals1.jpeg" alt="New Arrivals">
+                <h2>NEW ARRIVALS</h2>
+                <button onclick="location.href='new-arrivals.html'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/dress1.jpg" alt="Dresses">
+                <h2>DRESSES</h2>
+                <button onclick="location.href='dresses.html'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/top1.jpg" alt="Tops">
+                <h2>TOPS</h2>
+                <button onclick="location.href='tops.html'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/jeans1.jpg" alt="Denim">
+                <h2>DENIM</h2>
+                <button onclick="location.href='denim.html'">Shop Collection ></button>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+    <div class="popup" id="signInPopup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Sign In</h2>
+        <form>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+    </div>
+
+    <div class="popup" id="signUpPopup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Join Now</h2>
+        <form>
+            <input type="text" placeholder="First Name" required>
+            <input type="text" placeholder="Last Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Join Now</button>
+        </form>
+    </div>
+
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+<script src="header.js"></script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</body>
+</html>
