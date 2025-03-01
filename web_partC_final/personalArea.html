@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Area</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh; /* הפריסה תתפרש על כל גובה המסך */
+        }
+
+        .sidebar {
+            width: 20%; /* צמצום הרוחב ל-20% */
+            background-color: #f9f9f9;
+            padding: 30px 20px;
+            border-right: 1px solid #ddd;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #f0f0f0;
+            color: #007bff;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
+
+        .content h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .order, .feedback {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .order:hover, .feedback:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .order img, .feedback img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+  <div id="header-container"></div>
+
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Personal Area</h2>
+            <ul>
+                <li><a onclick="showSection('personal-info')">Account Information</a></li>
+                <li><a onclick="showSection('order-history')">Order History</a></li>
+                <li><a onclick="showSection('feedbacks')">Feedbacks</a></li>
+                <li><a onclick="showSection('help-center')">Help Center</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <!-- Personal Info Section -->
+            <section id="personal-info">
+                <h3>Account Information</h3>
+                <p><strong>Email:</strong> example@mail.com</p>
+                <p><strong>Phone:</strong> 123-456-7890</p>
+                <p><strong>Address:</strong> 123 Example Street, City</p>
+                <p><strong>Gender:</strong> Male</p>
+                <p><strong>Shipping Preference:</strong> Express</p>
+            </section>
+
+            <!-- Order History Section -->
+            <section id="order-history" style="display: none;">
+               <!-- ההיסטוריה תתווסף כאן דינמית -->
+            </section>
+
+            <!-- Feedbacks Section -->
+            <section id="feedbacks" style="display: none;">
+                <h3>Feedbacks</h3>
+                <div class="feedback">
+                    <img src="https://via.placeholder.com/80" alt="Product Image">
+                    <div>
+                        <p><strong>Product:</strong> Water Bottle</p>
+                        <p><strong>Rating:</strong> 4/5</p>
+                        <p><strong>Comment:</strong> Great product!</p>
+                    </div>
+                </div>
+                <div class="feedback">
+                    <img src="https://via.placeholder.com/80" alt="Product Image">
+                    <div>
+                        <p><strong>Product:</strong> Audio Cable</p>
+                        <p><strong>Rating:</strong> 5/5</p>
+                        <p><strong>Comment:</strong> Excellent quality!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Center Section -->
+            <section id="help-center" style="display: none;">
+                <h3>Help Center</h3>
+                <p>If you need assistance, please contact us or leave a support request below:</p>
+                <button>Submit a Support Request</button>
+            </section>
+        </main>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check the URL for a hash and show the corresponding section
+        const hash = window.location.hash.substring(1); // Get the hash without the #
+        if (hash) {
+            showSection(hash); // Call the function to display the correct section
+        }
+    });
+
+    window.addEventListener('hashchange', () => {
+        // Update the displayed section when the hash changes
+        const hash = window.location.hash.substring(1); // Get the hash without the #
+        if (hash) {
+            showSection(hash); // Call the function to display the correct section
+        }
+    });
+
+    function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.content section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Show the selected section
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+        } else {
+            // Optionally, show a default section if the target section doesn't exist
+            const defaultSection = document.getElementById('personal-info');
+            if (defaultSection) {
+                defaultSection.style.display = 'block';
+            }
+        }
+    }
+
+    function loadOrderHistory() {
+        const orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        const orderHistoryContainer = document.getElementById('order-history');
+        orderHistoryContainer.innerHTML = '<h3>Order History</h3>';
+
+        if (orders.length === 0) {
+            orderHistoryContainer.innerHTML += '<p>No orders found.</p>';
+            return;
+        }
+
+        orders.forEach(order => {
+            const orderDiv = document.createElement('div');
+            orderDiv.classList.add('order');
+            orderDiv.innerHTML = `
+                <div>
+                    <p><strong>Order ID:</strong> ${order.id}</p>
+                    <p><strong>Date:</strong> ${order.date}</p>
+                </div>
+            `;
+
+            order.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.innerHTML = `
+                    <img src="${item.imgSrc}" alt="${item.name}">
+                    <div>
+                        <p><strong>Product:</strong> ${item.name}</p>
+                        <p><strong>Size:</strong> ${item.size}</p>
+                        <p><strong>Color:</strong> ${item.color}</p>
+                        <p><strong>Quantity:</strong> ${item.quantity}</p>
+                        <p><strong>Price:</strong> ₪${item.price}</p>
+                    </div>
+                `;
+                orderDiv.appendChild(itemDiv);
+            });
+
+            orderHistoryContainer.appendChild(orderDiv);
+        });
+    }
+
+    // טען את היסטוריית ההזמנות בעת טעינת העמוד
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.location.hash === '#order-history') {
+            loadOrderHistory();
+        }
+    });
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</body>
+</html>

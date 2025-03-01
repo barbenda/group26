@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - D&B Clothing</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 50px 20px;
+            text-align: left;
+            max-width: 800px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+  <div id="header-container"></div>
+
+    <main>
+        <h2>OUR STORY</h2>
+        <p>Welcome to d&amp;b, a luxury clothing brand founded by two university engineering students, Dotan and Bar, driven by a shared passion for fashion and quality. At d&amp;b, we believe that clothing is more than just fabric &ndash; it's an expression of individuality, confidence, and elegance. Our mission is to create high-end designs that combine premium craftsmanship with timeless style, offering a wardrobe that feels as exceptional as it looks.</p>
+        <p>We are committed to redefining luxury by blending meticulous attention to detail with innovative design, ensuring that every piece you wear tells a story of sophistication and care. Join us on this journey to celebrate quality, creativity, and the pursuit of perfection. D&amp;B &ndash; where passion meets luxury.</p>
+    </main>
+
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+
+</html>

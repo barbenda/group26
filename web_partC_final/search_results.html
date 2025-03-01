@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        header h1 {
+            cursor: pointer;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .favorite-icon {
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer;
+        }
+
+        .favorite-icon:hover:hover {
+            opacity: 0.8;
+        }
+
+        .product button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product button:hover {
+            background-color: #444;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .product a:hover {
+            color: #7B2CBF;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    <main>
+        <section class="product-grid" id="results-container">
+            <!-- Search results will be loaded here -->
+        </section>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // טוען את קובץ ה-HTML של הכותרת
+            fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                    // מחדיר את התוכן של הכותרת ל-DOM
+                    document.getElementById("header-container").innerHTML = data;
+
+                    // טוען ומבצע את הקוד של header.js
+                    const script = document.createElement("script");
+                    script.src = "header.js";
+                    script.type = "text/javascript";
+                    document.body.appendChild(script);
+                })
+                .catch(error => console.error("Error loading header:", error));
+        });
+
+        // פונקציות הוספת מוצרים ואייקונים
+        const pages = [
+            { file: 'denim.html', variable: 'products' },
+            { file: 'dresses.html', variable: 'products' },
+            { file: 'tops.html', variable: 'products' },
+            { file: 'new-arrivals.html', variable: 'products' },
+        ];
+
+        async function loadResults() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('query');
+
+            if (!query) {
+                document.getElementById('results-container').innerHTML =
+                    '<p>No search query provided.</p>';
+                return;
+            }
+
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = '<p>Searching...</p>';
+
+            const allProducts = [];
+
+            for (const page of pages) {
+                try {
+                    const response = await fetch(page.file);
+                    if (!response.ok) throw new Error(`Failed to load ${page.file}`);
+                    const html = await response.text();
+
+                    const variableRegex = new RegExp(`const ${page.variable} = (\\[.*?\\]);`, 's');
+                    const match = html.match(variableRegex);
+                    if (match) {
+                        const products = eval(match[1]);
+                        allProducts.push(...products);
+                    } else {
+                        console.error(`No products found in ${page.file}`);
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${page.file}:`, error);
+                }
+            }
+
+            const filteredProducts = allProducts.filter(product =>
+                product.name.toLowerCase().includes(query.toLowerCase())
+            );
+
+        if (filteredProducts.length === 0) {
+            resultsContainer.innerHTML = `<p>No results found for "${query}".</p>`;
+        } else {
+            resultsContainer.innerHTML = filteredProducts
+                .map(
+                    product => `
+                    <div class="product">
+                        <a href="product.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}&img=${encodeURIComponent(product.img)}">
+                            <img src="${product.img}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                        </a>
+                        <p>${product.price}</p>
+                        <div class="actions">
+                            <img
+                                src="images/heart-icon.png"
+                                alt="Favorite"
+                                class="favorite-icon"
+                                data-id="${product.id}"
+                                onclick="toggleFavorite(this, '${product.id}', '${product.name}', '${product.price}', '${product.img}')">
+                        </div>
+                    </div>`
+                )
+                .join('');
+
+            loadFavoriteIcons(); // קריאה לסנכרון אייקונים של הלבבות
+        }
+
+
+                }
+        window.onload = function() {
+            loadResults();
+            loadFavoriteIcons(); // לוודא סנכרון של האייקונים עם המועדפים
+        };
+        function toggleFavorite(element, id, name, price, imgSrc) {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const itemIndex = favorites.findIndex(item => item.id === id);
+
+            if (itemIndex === -1) {
+                // הוספת מוצר למועדפים עם כל הפרטים
+                favorites.push({ id, name, price, imgSrc });
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                element.src = "images/heart-filled-icon.jpg"; // שינוי האייקון
+            } else {
+                // הסרת מוצר ממועדפים
+                favorites.splice(itemIndex, 1);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                element.src = "images/heart-icon.png"; // שינוי האייקון
+            }
+        }
+        function loadFavoriteIcons() {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const favoriteIcons = document.querySelectorAll('.favorite-icon');
+
+            favoriteIcons.forEach(icon => {
+                const productID = icon.getAttribute('data-id');
+                const isFavorite = favorites.some(item => item.id === productID);
+
+                // אם המוצר במועדפים, שינוי הלב לאדום
+                icon.src = isFavorite ? "images/heart-filled-icon.jpg" : "images/heart-icon.png";
+            });
+        }
+
+    </script>
+<script src="header.js"></script>
+
+</body>
+</html>

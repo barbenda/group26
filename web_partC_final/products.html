@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        header h1 {
+            cursor: pointer;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .favorite-icon {
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer;
+        }
+
+        .favorite-icon:hover {
+            opacity: 0.8;
+        }
+
+        .product button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product button:hover {
+            background-color: #444;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .product a:hover {
+            color: #7B2CBF;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-container"></div>
+
+    <main>
+        <h2 id="category-title"></h2>
+        <section class="product-grid"></section>
+    </main>
+
+    <script>
+        async function loadProducts() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                let category = urlParams.get("category");
+
+                if (!category) {
+                    document.getElementById("category-title").innerText = "Category Not Found";
+                    console.error("❌ No category found in URL");
+                    return;
+                }
+
+                document.getElementById("category-title").innerText = category + " Collection";
+                console.log(`🔄 Fetching products for category: ${category}`);
+
+                const apiUrl = `http://127.0.0.1:5000/products/${encodeURIComponent(category)}`;
+                console.log(`📡 Fetching from: ${apiUrl}`);
+
+                const response = await fetch(apiUrl, { method: "GET" });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const products = await response.json();
+                console.log("✅ Data received from API:", products);
+
+                if (!Array.isArray(products) || products.length === 0) {
+                    document.querySelector(".product-grid").innerHTML = "<p style='color: red;'>No products found.</p>";
+                    return;
+                }
+
+                const productGrid = document.querySelector(".product-grid");
+                productGrid.innerHTML = "";
+
+                let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+                products.forEach(product => {
+                    const productId = product._id ? product._id.toString() : `temp-${Math.random().toString(36).substr(2, 9)}`;
+                    const isFavorite = favorites.some(fav => fav.id === productId);
+
+                    const productDiv = document.createElement("div");
+                    productDiv.classList.add("product");
+
+                    productDiv.innerHTML = `
+                        <a href="product.html?id=${productId}&name=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}&img=${encodeURIComponent(product.image)}">
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                        </a>
+                        <p>${product.price} NIS</p>
+                        <div class="actions">
+                            <img
+                                src="${isFavorite ? 'images/heart-filled-icon.jpg' : 'images/heart-icon.png'}"
+                                alt="Favorite"
+                                class="favorite-icon"
+                                data-id="${productId}"
+                                onclick="toggleFavorite(this, '${productId}', '${product.name}', '${product.price}', '${product.image}')">
+                        </div>
+                    `;
+
+                    productGrid.appendChild(productDiv);
+                });
+
+                loadFavoriteIcons();
+
+            } catch (error) {
+                console.error("❌ Error loading products:", error);
+                document.querySelector(".product-grid").innerHTML = `<p style='color: red;'>Error loading products: ${error.message}</p>`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProducts);
+
+        function toggleFavorite(element, id, name, price, imgSrc) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const itemIndex = favorites.findIndex(item => item.id === id);
+
+            if (itemIndex === -1) {
+                favorites.push({ id, name, price, imgSrc });
+                element.src = "images/heart-filled-icon.jpg";
+            } else {
+                favorites.splice(itemIndex, 1);
+                element.src = "images/heart-icon.png";
+            }
+
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            loadFavoriteIcons();
+        }
+
+        function loadFavoriteIcons() {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            document.querySelectorAll('.favorite-icon').forEach(icon => {
+                const productID = icon.getAttribute('data-id');
+                const isFavorite = favorites.some(item => item.id === productID);
+                icon.src = isFavorite ? "images/heart-filled-icon.jpg" : "images/heart-icon.png";
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadFavoriteIcons);
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-container").innerHTML = data;
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+    </script>
+    <script src="header.js"></script>
+
+    <footer>
+        <p>&copy; 2024 d&b Clothing. All rights reserved.</p>
+    </footer>
+</body>
+</html>

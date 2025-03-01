@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-form {
+            flex: 2;
+            padding: 40px;
+            border-right: 1px solid #ddd;
+        }
+
+        .cart-summary {
+            flex: 1;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        h3 {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /*form {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    gap: 20px;*/
+        /*}*/
+
+.pay-button {
+    display: flex;
+    justify-content: center; /* ממרכז את הכפתור אופקית */
+    margin-top: 20px; /* ריווח מהאלמנט שמעל הכפתור */
+}
+        .form-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        .form-group.error input, .form-group.error select {
+            border-color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-group-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group-row .form-group {
+            flex: 1;
+        }
+
+        .submit-button {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .cart-summary .item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-summary .item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .cart-summary .item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-summary .item-details span {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .cart-summary .total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+  <div id="header-container"></div>
+
+    <div class="container">
+        <div class="checkout-form">
+            <h2>Delivery</h2>
+            <form id="checkout-form">
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="last-name" name="last-name" placeholder="Last Name" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" placeholder="Phone (e.g., 05XXXXXXXX)" required pattern="05[0-9]{8}">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="address" name="address" placeholder="Address" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <input type="text" id="postal-code" name="postal-code" placeholder="Postal Code" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select id="country" name="country" required>
+                        <option value="" disabled selected>Country/Region</option>
+                        <option value="Israel">Israel</option>
+                        <option value="USA">USA</option>
+                        <option value="UK">UK</option>
+                    </select>
+                    <span class="error-message"></span>
+                </div>
+                <h3>Payment</h3>
+                <div class="form-group">
+                    <input type="text" id="card-number" name="card-number" placeholder="Card Number" required pattern="\d{16}">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <input type="text" id="expiration-date" name="expiration-date" placeholder="Expiration Date (MM/YY)" required pattern="(0[1-9]|1[0-2])/(\d{2})">
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="security-code" name="security-code" placeholder="CVV" required pattern="\d{3}">
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="cardholder-name" name="cardholder-name" placeholder="Cardholder Name" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="id-number" name="id-number" placeholder="ID Number" required pattern="\d{9}">
+                    <span class="error-message"></span>
+                </div >
+                <div class="pay-button">
+                     <button type="submit" class="submit-button">Pay Now</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+
+        </div>
+    </div>
+<script>
+    const form = document.getElementById('checkout-form');
+
+    // אובייקט עם בדיקות מותאמות אישית לכל שדה
+    const validators = {
+        'first-name': value => value.trim() === '' ? 'Please enter your first name.' : '',
+        'last-name': value => value.trim() === '' ? 'Please enter your last name.' : '',
+        'email': value => /\S+@\S+\.\S+/.test(value) ? '' : 'Please enter a valid email address.',
+        'phone': value => /^05[0-9]{8}$/.test(value) ? '' : 'Phone number must be in the format 05XXXXXXXX.',
+        'address': value => value.trim() === '' ? 'Please enter your address.' : '',
+        'postal-code': value => /^\d+$/.test(value) ? '' : 'Postal code must contain only numbers.',
+        'city': value => value.trim() === '' ? 'Please enter your city.' : '',
+        'country': value => value === '' ? 'Please select a country/region.' : '',
+        'card-number': value => /^\d{16}$/.test(value) ? '' : 'Card number must be 16 digits.',
+        'expiration-date': value => /^(0[1-9]|1[0-2])\/(\d{2})$/.test(value) ? '' : 'Expiration date must be in the format MM/YY.',
+        'security-code': value => /^\d{3}$/.test(value) ? '' : 'CVV must be 3 digits.',
+        'cardholder-name': value => value.trim() === '' ? 'Please enter the cardholder name.' : '',
+        'id-number': value => /^\d{9}$/.test(value) ? '' : 'ID number must be 9 digits.'
+    };
+
+    // מאזין לאירוע שליחה של הטופס
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        let valid = true;
+
+        // בדיקת כל השדות בטופס
+        form.querySelectorAll('input, select').forEach(input => {
+            const errorMessage = validators[input.id](input.value);
+            const errorSpan = input.nextElementSibling;
+
+            if (errorMessage) {
+                errorSpan.textContent = errorMessage;
+                input.classList.add('error');
+                valid = false;
+            } else {
+                errorSpan.textContent = '';
+                input.classList.remove('error');
+            }
+        });
+
+        if (!valid) return; // אם יש שגיאות, לא ממשיכים לשליחה
+
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+            alert("Your cart is empty. Add items to proceed.");
+            return;
+        }
+
+        // איסוף הנתונים מהטופס
+        const formData = {
+            first_name: document.getElementById("first-name").value.trim(),
+            last_name: document.getElementById("last-name").value.trim(),
+            email: document.getElementById("email").value.trim().toLowerCase(),
+            phone: document.getElementById("phone").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            postal_code: document.getElementById("postal-code").value.trim(),
+            city: document.getElementById("city").value.trim(),
+            country: document.getElementById("country").value.trim(),
+            card_number: document.getElementById("card-number").value.trim(),
+            expiration_date: document.getElementById("expiration-date").value.trim(),
+            security_code: document.getElementById("security-code").value.trim(),
+            cardholder_name: document.getElementById("cardholder-name").value.trim(),
+            id_number: document.getElementById("id-number").value.trim(),
+            items: cart
+        };
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/orders", { // ודא שהשרת Flask פועל
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("הזמנה נוצרה בהצלחה!");
+                localStorage.removeItem("cart"); // ניקוי העגלה לאחר השליחה
+                window.location.href = "personalArea.html#order-history"; // מעבר לאזור האישי
+            } else {
+                alert("שגיאה ביצירת ההזמנה: " + result.error);
+            }
+        } catch (error) {
+            alert("אירעה שגיאה: " + error.message);
+        }
+    });
+
+    // מאזין לאירועי `input` כדי לנקות שגיאות בזמן אמת
+    form.querySelectorAll('input, select').forEach(input => {
+        input.addEventListener('input', () => {
+            const errorMessage = validators[input.id](input.value);
+            const errorSpan = input.nextElementSibling;
+
+            if (errorMessage) {
+                errorSpan.textContent = errorMessage;
+                input.classList.add('error');
+            } else {
+                errorSpan.textContent = '';
+                input.classList.remove('error');
+            }
+        });
+    });
+
+    function loadCheckoutCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartSummary = document.querySelector('.cart-summary');
+
+        cartSummary.innerHTML = '<h3>Order Summary</h3>';
+        let total = 0;
+
+        if (cart.length > 0) {
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.innerHTML = `
+                    <img src="${item.imgSrc}" alt="${item.name}">
+                    <div class="item-details">
+                        <span><strong>Product:</strong> ${item.name}</span>
+                        <span><strong>Size:</strong> ${item.size}</span>
+                        <span><strong>Color:</strong> ${item.color}</span>
+                        <span><strong>Quantity:</strong> ${item.quantity}</span>
+                        <span><strong>Price:</strong> ₪${item.price}</span>
+                    </div>
+                `;
+                cartSummary.appendChild(itemDiv);
+
+                total += parseFloat(item.price.replace(/[^\d.-]/g, '')) * item.quantity;
+            });
+
+            const totalDiv = document.createElement('div');
+            totalDiv.classList.add('total');
+            totalDiv.textContent = `Total: ₪${total.toFixed(2)}`;
+            cartSummary.appendChild(totalDiv);
+        } else {
+            cartSummary.innerHTML += '<p>Your cart is empty.</p>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCheckoutCart);
+</script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</html>

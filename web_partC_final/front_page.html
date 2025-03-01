@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&B Clothing - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+      <div id="header-container"></div>
+
+
+    <main>
+        <section class="collections">
+            <div class="collection">
+                <img src="images/newArrivals1.jpeg" alt="New Arrivals">
+                <h2>NEW ARRIVALS</h2>
+                <button onclick="location.href='products.html?category=NEW ARRIVALS'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/dress1.jpg" alt="Dresses">
+                <h2>DRESSES</h2>
+                <button onclick="location.href='products.html?category=DRESSES'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/top1.jpg" alt="Tops">
+                <h2>TOPS</h2>
+                <button onclick="location.href='products.html?category=TOPS'">Shop Collection ></button>
+            </div>
+            <div class="collection">
+                <img src="images/jeans1.jpg" alt="Denim">
+                <h2>DENIM</h2>
+                <button onclick="location.href='products.html?category=DENIM'">Shop Collection ></button>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+    <div class="popup" id="signInPopup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Sign In</h2>
+        <form id="loginForm">
+            <input type="email" id="login_email" placeholder="Email" required>
+            <input type="password" id="login_password" placeholder="Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <p id="loginMessage"></p>
+    </div>
+
+      <div id="userGreeting" style="display: none; position: absolute; right: 20px; top: 10px; font-weight: bold;">
+        Hello <span id="userFullName"></span> | <button onclick="logoutUser()">Logout</button>
+      </div>
+
+    <div class="popup" id="signUpPopup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Join Now</h2>
+        <form id="registerForm">
+            <input type="text" id="first_name" placeholder="First Name" required>
+            <input type="text" id="last_name" placeholder="Last Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Join Now</button>
+        </form>
+        <p id="registerMessage"></p> <!-- הצגת הודעה למשתמש -->
+    </div>
+
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // מונע רענון דף
+
+            const loginData = {
+                email: document.getElementById("login_email").value,
+                password: document.getElementById("login_password").value
+            };
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginData),
+                    credentials: "include"  // 🔹 חשוב כדי לשמור את ה-Session
+                });
+
+                const result = await response.json();
+                const messageElement = document.getElementById("loginMessage");
+
+                if (response.ok) {
+                    messageElement.innerText = "✅ Login successful!";
+                    messageElement.style.color = "green";
+
+                    // 🔹 שמירת השם ב- localStorage כדי שלא יימחק אחרי רענון
+                    localStorage.setItem("fullName", result.full_name);
+
+                    // עדכון התצוגה
+                    updateUserGreeting();
+
+                    setTimeout(closePopup, 1000); // סגירת הפופ-אפ לאחר 1 שנייה
+                } else {
+                    messageElement.innerText = `❌ ${result.error}`;
+                    messageElement.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Error logging in:", error);
+                document.getElementById("loginMessage").innerText = "❌ Server error. Try again later.";
+            }
+        });
+
+
+        function updateUserGreeting() {
+            const fullName = localStorage.getItem("fullName");
+            if (fullName) {
+                document.getElementById("userFullName").innerText = fullName;
+                document.getElementById("userGreeting").style.display = "block";
+            }
+        }
+        document.addEventListener("DOMContentLoaded", updateUserGreeting);
+
+
+        function closePopup() {
+            document.getElementById("signInPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        async function logoutUser() {
+            console.log("Logout button clicked!"); // בדיקה שהכפתור נלחץ
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/logout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include" // 🔹 חשוב כדי לאפשר Cookies/Sessions!
+                });
+
+                if (response.ok) {
+                    console.log("Logout successful!");
+
+                    // מחיקת הנתונים מה- localStorage
+                    localStorage.removeItem("fullName");
+
+                    alert("Logged out successfully!");
+
+                    // רענון הדף
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    console.error("Logout failed:", await response.text());
+                    alert("❌ Logout failed. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error logging out:", error);
+                alert("❌ Error logging out. Please check Flask server.");
+            }
+        }
+
+
+
+
+
+    </script>
+
+
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // מונע ריענון דף
+
+            const userData = {
+                first_name: document.getElementById("first_name").value,
+                last_name: document.getElementById("last_name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/customers", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+                const messageElement = document.getElementById("registerMessage");
+
+                if (response.ok) {
+                    messageElement.innerText = " Registration successful!";
+                    messageElement.style.color = "green";
+                    setTimeout(closePopup, 2000); // סגירת חלונית לאחר 2 שניות
+                } else {
+                    messageElement.innerText = ` ${result.error}`;
+                    messageElement.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Error registering user:", error);
+                document.getElementById("registerMessage").innerText = " Server error. Try again later.";
+            }
+        });
+
+        function closePopup() {
+            document.getElementById("signUpPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+    </script>
+<script src="header.js"></script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+</body>
+</html>

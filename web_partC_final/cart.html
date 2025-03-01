@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+/* מיכל לכפתור */
+.checkout-container {
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* מוודא שהוא באמצע */
+    padding: 5px;
+}
+
+/* מיכל של הכמות */
+.quantity-container {
+    display: flex; /* מסדר את הכפתורים והמספר בשורה */
+    align-items: center; /* ממרכז אנכית */
+    justify-content: center; /* ממרכז אופקית */
+    gap: 5px; /* רווח בין הכפתורים לכמות */
+    margin-top: 10px; /* רווח למעלה */
+}
+
+/* כפתורי פלוס ומינוס */
+.quantity-btn {
+    background-color: #333; /* צבע כהה */
+    color: #fff;
+    border: none;
+    border-radius: 5px; /* פינות מעוגלות */
+    width: 30px; /* גודל הכפתורים */
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center; /* ממקם את הסימנים (+/-) במרכז */
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quantity-btn:hover {
+    background-color: #555; /* שינוי צבע בריחוף */
+}
+
+.quantity-btn:active {
+    background-color: #777;
+}
+
+/* המספר */
+.quantity-number {
+    font-size: 18px; /* גודל ברור למספר הכמות */
+    font-weight: bold;
+    min-width: 30px; /* מוודא שהכמות לא תתכווץ */
+    text-align: center; /* ממרכז את המספר */
+}
+
+
+/* עיצוב כפתור */
+.checkout-btn {
+    background-color: #000; /* צבע שחור אלגנטי */
+    color: #fff; /* טקסט לבן */
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 40px; /* התאמה לגודל צר יותר */
+    border: none;
+    border-radius: 25px; /* פינות מעוגלות */
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center; /* מרכז טקסט */
+}
+
+/* אפקט ריחוף */
+.checkout-btn:hover {
+    background-color: #333; /* גוון כהה יותר */
+    transform: translateY(-3px); /* הרמה עדינה */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* אפקט לחיצה */
+.checkout-btn:active {
+    background-color: #555; /* גוון בהיר יותר */
+    transform: translateY(2px); /* לחיצה פנימה */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .product button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product button:hover {
+            background-color: #444;
+        }
+
+
+    </style>
+</head>
+
+
+<body>
+  <div id="header-container"></div>
+
+    <main>
+        <section class="product-grid" id="cart-container">
+            <!-- Cart items will be loaded here -->
+        </section>
+    </main>
+
+<div class="checkout-container">
+        <button class="checkout-btn" onclick="goToPaymentPage()">Proceed to Checkout</button>
+    </div>
+
+    <script>
+        //3
+      function loadCart() {
+    const cartContainer = document.getElementById('cart-container');
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    cartContainer.innerHTML = '';
+
+    if (cart.length > 0) {
+        cart.forEach((item, index) => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+
+            productDiv.innerHTML = `
+                <img src="${item.imgSrc}" alt="${item.name}">
+                <h3>${item.name}</h3>
+                <p>Size: ${item.size}</p>
+                <p>Color: ${item.color}</p>
+                <p>Price: ${item.price}</p>
+    <p>Quantity:
+        <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">&#8722;</button>
+        ${item.quantity}
+        <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">&#43;</button>
+    </p>
+    <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+`;
+
+            cartContainer.appendChild(productDiv);
+        });
+    } else {
+        cartContainer.innerHTML = '<p>No items in cart yet. Go add some from the denim section!</p>';
+    }
+}
+
+
+function removeFromCart(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // הסרה מהעגלה
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart(); // עדכון התצוגה של העגלה
+    updateCartCount(); // עדכון מונה הפריטים
+}
+
+function updateQuantity(index, change) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity += change;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1); // הסרה אם הכמות היא 0
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart(); // רענון תצוגת העגלה
+    updateCartCount(); // עדכון מונה הפריטים
+}
+
+
+        window.onload = loadCart;
+
+    </script>
+
+<footer>
+    <div class="footer-content">
+        <p class="footer-text">Sign up to gain exclusive early access to new arrivals, sales, and more!</p>
+
+       <form class="footer-form">
+    <input type="email" placeholder="Enter your email" class="footer-input" required>
+    <button class="footer-icon-button" type="submit">
+        <i class="fas fa-envelope"></i> <!-- אייקון הדואר -->
+    </button>
+</form>
+
+    </div>
+    <p class="footer-copyright">
+        &copy; 2024 d&b Clothing. All rights reserved.
+    </p>
+</footer>
+
+</body>
+
+  <script>
+        function goToPaymentPage() {
+            window.location.href = "Checkout.html"; // כתובת URL לדף התשלום
+        }
+    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // טוען את קובץ ה-HTML של הכותרת
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                // מחדיר את התוכן של הכותרת ל-DOM
+                document.getElementById("header-container").innerHTML = data;
+
+                // טוען ומבצע את הקוד של header.js
+                const script = document.createElement("script");
+                script.src = "header.js";
+                script.type = "text/javascript";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading header:", error));
+    });
+</script>
+<script src="header.js"></script>
+
+</html>
